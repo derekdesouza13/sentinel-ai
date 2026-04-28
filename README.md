@@ -1,6 +1,8 @@
 # Sentinel AI 🚨
 
 Real-time AI-powered incident detection system.
+A real-time monitoring system inspired by distributed event-driven architectures, capable of ingesting, processing, and streaming high-frequency incident data with AI-based classification.
+
 
 ## 🚀 Live System Design
 
