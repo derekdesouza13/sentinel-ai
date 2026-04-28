@@ -16,6 +16,7 @@ function getSeverityColor(severity) {
 function App() {
   const [incidents, setIncidents] = useState([]);
   const [status, setStatus] = useState("Connecting...");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const ws = new WebSocket("ws://127.0.0.1:8000/ws");
@@ -40,6 +41,18 @@ function App() {
 
     return () => ws.close();
   }, []);
+
+  // 🔥 FILTERED INCIDENTS (SEARCH)
+  const filteredIncidents = incidents.filter(item =>
+    item.log.toLowerCase().includes(search.toLowerCase()) ||
+    item.analysis.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // 🔥 METRICS
+  const total = incidents.length;
+  const high = incidents.filter(i => getSeverity(i.analysis) === "High").length;
+  const medium = incidents.filter(i => getSeverity(i.analysis) === "Medium").length;
+  const low = incidents.filter(i => getSeverity(i.analysis) === "Low").length;
 
   return (
     <div style={{
@@ -69,16 +82,47 @@ function App() {
         </span>
       </div>
 
-      {/* INCIDENT CONTAINER */}
+      {/* 🔥 METRICS BAR */}
       <div style={{
-        maxHeight: "80vh",
+        display: "flex",
+        gap: "15px",
+        marginBottom: "20px",
+        flexWrap: "wrap"
+      }}>
+        <Metric title="Total" value={total} color="#3b82f6" />
+        <Metric title="High" value={high} color="#ff4d4f" />
+        <Metric title="Medium" value={medium} color="#faad14" />
+        <Metric title="Low" value={low} color="#52c41a" />
+      </div>
+
+      {/* 🔥 SEARCH BAR */}
+      <input
+        type="text"
+        placeholder="Search incidents..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginBottom: "20px",
+          borderRadius: "8px",
+          border: "none",
+          outline: "none",
+          background: "#1e293b",
+          color: "white"
+        }}
+      />
+
+      {/* INCIDENT LIST */}
+      <div style={{
+        maxHeight: "70vh",
         overflowY: "auto",
         paddingRight: "5px"
       }}>
-        {incidents.length === 0 ? (
-          <p style={{ color: "#94a3b8" }}>No incidents yet...</p>
+        {filteredIncidents.length === 0 ? (
+          <p style={{ color: "#94a3b8" }}>No incidents found...</p>
         ) : (
-          incidents.map((item, index) => {
+          filteredIncidents.map((item, index) => {
             const severity = getSeverity(item.analysis);
             const color = getSeverityColor(severity);
 
@@ -113,10 +157,8 @@ function App() {
                     {item.log}
                   </p>
 
-                  {/* SEVERITY BADGE */}
                   <span style={{
                     background: color,
-                    color: "white",
                     padding: "4px 10px",
                     borderRadius: "999px",
                     fontSize: "12px",
@@ -126,7 +168,6 @@ function App() {
                   </span>
                 </div>
 
-                {/* ANALYSIS */}
                 <pre style={{
                   margin: 0,
                   color: "#cbd5f5",
@@ -141,6 +182,25 @@ function App() {
           })
         )}
       </div>
+    </div>
+  );
+}
+
+// 🔥 METRIC COMPONENT
+function Metric({ title, value, color }) {
+  return (
+    <div style={{
+      background: "#1e293b",
+      padding: "15px",
+      borderRadius: "10px",
+      minWidth: "120px",
+      textAlign: "center",
+      borderTop: `4px solid ${color}`
+    }}>
+      <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+        {title}
+      </p>
+      <h2 style={{ margin: 0 }}>{value}</h2>
     </div>
   );
 }
