@@ -14,8 +14,11 @@ async def process_logs(queue, results):
 
         results.append(incident)
 
-        # send to frontend via websocket
-        for client in clients:
-            await client.send_json(incident)
+        # ✅ SEND SAFELY TO CLIENTS
+        for client in clients.copy():
+            try:
+                await client.send_json(incident)
+            except:
+                clients.remove(client)
 
         print("Processed:", log)
