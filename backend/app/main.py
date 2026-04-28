@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from app.routes import incidents
 from app.services.simulator import generate_logs
 from app.services.processor import process_logs
-from app.core.state import queue, results
+from app.core.state import queue, results, clients
 import asyncio
 
 app = FastAPI(title="Sentinel AI")

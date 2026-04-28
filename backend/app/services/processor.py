@@ -1,5 +1,5 @@
 from app.services.ai_service import classify_incident
-from app.main import clients   # 👈 important
+from app.core.state import clients
 
 async def process_logs(queue, results):
     while True:
@@ -14,6 +14,7 @@ async def process_logs(queue, results):
 
         results.append(incident)
 
+        # send to frontend via websocket
         for client in clients:
             await client.send_json(incident)
 
