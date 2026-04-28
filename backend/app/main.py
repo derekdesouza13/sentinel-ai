@@ -1,10 +1,11 @@
-from fastapi import FastAPI
-from app.routes import incidents
+import asyncio
+from app.services.simulator import generate_logs
+from app.services.processor import process_logs
 
-app = FastAPI(title="Sentinel AI")
+queue = asyncio.Queue()
+results = []
 
-app.include_router(incidents.router)
-
-@app.get("/")
-def root():
-    return {"status": "Sentinel AI running"}
+@app.on_event("startup")
+async def startup():
+    asyncio.create_task(generate_logs(queue))
+    asyncio.create_task(process_logs(queue, results))
