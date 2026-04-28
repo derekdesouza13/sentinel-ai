@@ -81,7 +81,9 @@ Sentinel AI simulates a production-grade incident detection pipeline:
 
 > Live incident dashboard updating in real-time
 
+## 📸 Demo
 
+![Sentinel AI Dashboard](./assets/demo.png)
 
 ---
 
