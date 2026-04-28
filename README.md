@@ -2,6 +2,10 @@
 
 Real-time AI-powered incident detection system.
 
+## 🚀 Live System Design
+
+This project simulates a distributed event-driven architecture inspired by systems like Kafka and real-time monitoring pipelines.
+
 ## Features
 - Real-time log simulation
 - Async event processing pipeline
