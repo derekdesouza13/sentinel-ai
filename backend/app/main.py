@@ -1,7 +1,7 @@
 import asyncio
 from app.services.simulator import generate_logs
 from app.services.processor import process_logs
-
+from app.core import config
 queue = asyncio.Queue()
 results = []
 
