@@ -1,8 +1,6 @@
-import asyncio
 from app.services.ai_service import classify_incident
 
 async def process_logs(queue, results):
-
     while True:
         log = await queue.get()
 
